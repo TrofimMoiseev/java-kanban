@@ -1,3 +1,6 @@
+package model;
+
+
 import java.util.Objects;
 
 public class Task {
@@ -10,14 +13,12 @@ public class Task {
         this.nameTask = nameTask;
         this.descriptionTask = descriptionTask;
         this.statusOfTask = statusOfTask;
-        this.id = TaskManager.getSequenceTask();
     }
 
     public Task(String nameTask, String descriptionTask) {
         this.nameTask = nameTask;
         this.descriptionTask = descriptionTask;
         this.statusOfTask = TaskStatus.NEW;
-        this.id = TaskManager.getSequenceTask();
     }
 
     public String getNameTask() {
@@ -40,6 +41,10 @@ public class Task {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
 
     @Override
     public String toString() {
@@ -51,16 +56,17 @@ public class Task {
                 + '}';
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id && Objects.equals(nameTask, task.nameTask) && Objects.equals(descriptionTask, task.descriptionTask) && statusOfTask == task.statusOfTask;
+        return id == task.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nameTask, descriptionTask, statusOfTask, id);
+        return Objects.hashCode(id);
     }
 }
