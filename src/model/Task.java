@@ -25,8 +25,16 @@ public class Task {
         return nameTask;
     }
 
+    public void setNameTask(String nameTask) {
+        this.nameTask = nameTask;
+    }
+
     public String getDescriptionTask() {
         return descriptionTask;
+    }
+
+    public void setDescriptionTask(String descriptionTask) {
+        this.descriptionTask = descriptionTask;
     }
 
     public TaskStatus getStatusOfTask() {
@@ -69,4 +77,6 @@ public class Task {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+
 }

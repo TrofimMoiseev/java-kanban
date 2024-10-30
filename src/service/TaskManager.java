@@ -25,15 +25,13 @@ public class TaskManager {
     }
 
     public int addNewSubtask(Subtask subtask) {
-        for (int k : epics.keySet()) {
-            if (subtask.getEpicId() == k) {
+            if (epics.containsKey(subtask.getEpicId())) {
                 subtask.setId(getSequence());
                 subtasks.put(subtask.getId(), subtask);
-                epics.get(k).addNewSubtaskOnList(subtask);
-                epics.get(k).updateEpicStatus();
+                epics.get(subtask.getEpicId()).addNewSubtaskOnList(subtask);
+                epics.get(subtask.getEpicId()).updateEpicStatus();
                 return subtask.getId();
             }
-        }
         System.out.println("Ошибка, Epic для данного Subtask не найден.");
         return 0;
     }
@@ -98,7 +96,7 @@ public class TaskManager {
 
     public void updateSubtask(Subtask subtask) {
         if (subtasks.containsKey(subtask.getId())) {
-            tasks.put(subtask.getId(), subtask);
+            subtasks.put(subtask.getId(), subtask);
             epics.get(subtask.getEpicId()).updateSubtaskList(subtask);
             epics.get(subtask.getEpicId()).updateEpicStatus();
         } else {
@@ -106,9 +104,10 @@ public class TaskManager {
         }
     }
 
-    public void updateEpic(Epic epic) {
-        if (epics.containsKey(epic.getId())) {
-            tasks.put(epic.getId(), epic);
+    public void updateEpic(Epic epic1) {
+        if (epics.containsKey(epic1.getId())) {
+            epics.get(epic1.getId()).setNameTask(epic1.getNameTask());
+            epics.get(epic1.getId()).setDescriptionTask(epic1.getDescriptionTask());
         } else {
             System.out.println("Задача не найдена");
         }
