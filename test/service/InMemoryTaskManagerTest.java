@@ -129,6 +129,7 @@ class InMemoryTaskManagerTest {
         savedTask = taskManager.getTask(taskId);
         savedEpic = taskManager.getEpic(epicId);
         savedSubtask = taskManager.getSubtask(subtaskId);
+        history = taskManager.getHistory();
         int historySize2 = history.size();
 
         assertNotEquals(historySize1, historySize2);
