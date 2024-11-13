@@ -1,11 +1,14 @@
-import service.TaskManager;
+import service.HistoryManager;
+import service.InMemoryTaskManager;
 import model.*;
+import service.Managers;
+import service.TaskManager;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        TaskManager manager = new TaskManager();
+        TaskManager manager = Managers.getDefault();
 
         // Создание
 
