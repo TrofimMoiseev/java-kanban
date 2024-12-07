@@ -1,5 +1,3 @@
-import service.HistoryManager;
-import service.InMemoryTaskManager;
 import model.*;
 import service.Managers;
 import service.TaskManager;
@@ -15,7 +13,7 @@ public class Main {
         Task task1 = new Task("Task #1", "Task1 description");
         final int taskId1 = manager.addNewTask(task1);
         Task task2 = new Task("Task #2", "Task2 description", TaskStatus.IN_PROGRESS);
-        final int taskId2 =manager.addNewTask(task2);
+        final int taskId2 = manager.addNewTask(task2);
 
         Epic epic1 = new Epic("Epic #1", "Epic1 description");
         final int epicId1 = manager.addNewEpic(epic1);
@@ -66,8 +64,6 @@ public class Main {
         System.out.println("Эпики:");
 
         System.out.println(manager.getEpicList());
-
-
 
 
         // Удаление
