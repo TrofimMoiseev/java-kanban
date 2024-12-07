@@ -9,8 +9,8 @@ import java.util.List;
 public class InMemoryTaskManager implements TaskManager {
     private final HistoryManager historyManager;
 
-    public InMemoryTaskManager(HistoryManager historyManager){
-        this.historyManager=historyManager;
+    public InMemoryTaskManager(HistoryManager historyManager) {
+        this.historyManager = historyManager;
     }
 
     private int sequenceTask = 0;
@@ -25,9 +25,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int addNewTask(Task task) { //Добавление задач в мапу
-            task.setId(getSequence());
-            tasks.put(task.getId(), task);
-            return task.getId();
+        task.setId(getSequence());
+        tasks.put(task.getId(), task);
+        return task.getId();
     }
 
     @Override
@@ -178,7 +178,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Task> getHistory(){
+    public List<Task> getHistory() {
         return historyManager.getHistory();
     }
 }
