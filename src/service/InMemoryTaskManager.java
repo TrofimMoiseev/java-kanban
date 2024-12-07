@@ -51,7 +51,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Task> getTaskList() {//Вывод мап
+    public List<Task> getTaskList() { //Вывод мап
         return new ArrayList<>(tasks.values());
     }
 
