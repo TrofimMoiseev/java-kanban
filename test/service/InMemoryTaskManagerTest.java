@@ -8,7 +8,6 @@ import model.*;
 
 import java.util.List;
 
-import static model.TaskStatus.IN_PROGRESS;
 import static model.TaskStatus.NEW;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -104,45 +103,5 @@ class InMemoryTaskManagerTest {
         assertNotNull(history);
     }
 
-    @Test
-    void saveHistoryAfterUpdate() {
-        taskId = taskManager.addNewTask(task);
-        savedTask = taskManager.getTask(taskId);
-        epicId = taskManager.addNewEpic(epic);
-        savedEpic = taskManager.getEpic(epicId);
-        subtask = new Subtask("Test subtask", "Test subtask description", NEW, epicId);
-        subtaskId = taskManager.addNewSubtask(subtask);
-        savedSubtask = taskManager.getSubtask(subtaskId);
-        List<Task> history = taskManager.getHistory();
-        int historySize1 = history.size();
-        task.setNameTask("Test task1");
-        task.setDescriptionTask("Test task1 description");
-        task.setStatusOfTask(IN_PROGRESS);
-        taskManager.updateTask(task);
-        epic.setNameTask("Test epic1");
-        epic.setDescriptionTask("Test epic1 description");
-        taskManager.updateEpic(epic);
-        subtask.setNameTask("Test subtask1");
-        subtask.setDescriptionTask("Test subtask1 description");
-        subtask.setStatusOfTask(IN_PROGRESS);
-        taskManager.updateSubtask(subtask);
-        savedTask = taskManager.getTask(taskId);
-        savedEpic = taskManager.getEpic(epicId);
-        savedSubtask = taskManager.getSubtask(subtaskId);
-        history = taskManager.getHistory();
-        int historySize2 = history.size();
-
-        assertNotEquals(historySize1, historySize2);
-        assertNotEquals(history.get(0).getNameTask(), history.get(3).getNameTask(), "Ошибка, экземпляр изменился.");
-        assertNotEquals(history.get(0).getDescriptionTask(), history.get(3).getDescriptionTask(), "Ошибка, экземпляр изменился.");
-        assertNotEquals(history.get(0).getStatusOfTask(), history.get(3).getStatusOfTask(), "Ошибка, экземпляр изменился.");
-        assertNotEquals(history.get(1).getNameTask(), history.get(4).getNameTask(), "Ошибка, экземпляр изменился.");
-        assertNotEquals(history.get(1).getDescriptionTask(), history.get(4).getDescriptionTask(), "Ошибка, экземпляр изменился.");
-        assertNotEquals(history.get(1).getStatusOfTask(), history.get(4).getStatusOfTask(), "Ошибка, экземпляр изменился.");
-        assertNotEquals(history.get(2).getNameTask(), history.get(5).getNameTask(), "Ошибка, экземпляр изменился.");
-        assertNotEquals(history.get(2).getDescriptionTask(), history.get(5).getDescriptionTask(), "Ошибка, экземпляр изменился.");
-        assertNotEquals(history.get(2).getStatusOfTask(), history.get(5).getStatusOfTask(), "Ошибка, экземпляр изменился.");
-
-    }
-
 }
+
