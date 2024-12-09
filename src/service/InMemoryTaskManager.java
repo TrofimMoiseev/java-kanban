@@ -67,12 +67,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearTask() { //Очистка мап
+        for(Task task : tasks.values()) {
+            historyManager.remove(task.getId());
+        }
         tasks.clear();
-
     }
 
     @Override
     public void clearSubtask() {
+        for(Subtask subtask : subtasks.values()) {
+            historyManager.remove(subtask.getId());
+        }
         subtasks.clear();
         for (Epic epic : epics.values()) {
             epic.clearSubtaskFromList();
@@ -82,6 +87,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearEpic() {
+        for(Epic epic : epics.values()) {
+            historyManager.remove(epic.getId());
+        }
+        for(Subtask subtask : subtasks.values()) {
+            historyManager.remove(subtask.getId());
+        }
         epics.clear();
         subtasks.clear();
     }

@@ -11,20 +11,16 @@ public class InMemoryHistoryManager implements HistoryManager {
     private final Map<Integer, Node<Task>> history = new HashMap<>();
 
     private void linkLast(Task task) {
-        Node<Task> newNode;
         Node<Task> oldTail = tail;
+        Node<Task> newNode = new Node<>(oldTail, task, null);
 
         if (oldTail == null) {
-            newNode = new Node<>(null, task, null);
             head = newNode;
         } else {
-            newNode = new Node<>(oldTail, task, null);
             oldTail.next = newNode;
         }
         tail = newNode;
-
-        Task t = newNode.task;
-        history.put(t.getId(), newNode);
+        history.put(task.getId(), newNode);
     }
 
     private List<Task> getTasks() {
