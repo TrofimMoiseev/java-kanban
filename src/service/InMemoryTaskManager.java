@@ -24,8 +24,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void setSequence(int newSequenceTask) {
-        if(newSequenceTask > sequenceTask) {
-        sequenceTask = newSequenceTask;
+        if (newSequenceTask > sequenceTask) {
+            sequenceTask = newSequenceTask;
         }
     }
 
@@ -52,15 +52,15 @@ public class InMemoryTaskManager implements TaskManager {
         } else {
             setSequence(task.getId());
         }
-            tasks.put(task.getId(), task);
-            return task.getId();
+        tasks.put(task.getId(), task);
+        return task.getId();
     }
 
     @Override
     public int addSubtask(Subtask subtask) throws ManagerSaveException {
 
         if (epics.containsKey(subtask.getEpicId())) {
-            if(subtask.getId() == 0) {
+            if (subtask.getId() == 0) {
                 subtask.setId(getSequence());
             } else {
                 setSequence(subtask.getId());
@@ -76,7 +76,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public int addEpic(Epic epic) throws ManagerSaveException {
-        if(epic.getId() == 0) {
+        if (epic.getId() == 0) {
             epic.setId(getSequence());
         } else {
             setSequence(epic.getId());

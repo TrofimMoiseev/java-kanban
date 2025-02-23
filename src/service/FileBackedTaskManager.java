@@ -1,11 +1,12 @@
 package service;
 
 import model.*;
+
 import java.io.*;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
-    private  final File file;
+    private final File file;
 
     public FileBackedTaskManager(HistoryManager historyManager, File file) throws ManagerSaveException {
         super(historyManager);
@@ -19,7 +20,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         if (file == null || file.exists()) {
             throw new ManagerSaveException("Ошибка при сохранении данных в файл.");
         }
-        try (Writer writer = new FileWriter(file) ) {
+        try (Writer writer = new FileWriter(file)) {
             writer.write("id,type,name,status,description,epicId" + "\n");
             for (Task task : getTasksMap().values()) {
                 writer.write(toString(task) + "\n");
@@ -37,12 +38,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private void loadFromFile(File file) throws ManagerSaveException {
-        try (BufferedReader  fileReader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader fileReader = new BufferedReader(new FileReader(file))) {
             fileReader.readLine();
             String line;
             while ((line = fileReader.readLine()) != null) {
                 Task task = fromString(line);
-                if(task instanceof Subtask) {
+                if (task instanceof Subtask) {
                     addSubtask((Subtask) task);
                 } else if (task instanceof Epic) {
                     addEpic((Epic) task);
@@ -57,12 +58,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private Task fromString(String value) { //id,type,name,status,description,epic
         String[] parts = value.split(",");
-            int id = Integer.parseInt(parts[0]);
-            TaskType taskType = TaskType.valueOf(parts[1]);
-            String name = parts[2];
-            TaskStatus status = TaskStatus.valueOf(parts[3]);
-            String description = parts[4];
-            int epicId = parts.length == 6 ? Integer.parseInt(parts[5]) : 0;
+        int id = Integer.parseInt(parts[0]);
+        TaskType taskType = TaskType.valueOf(parts[1]);
+        String name = parts[2];
+        TaskStatus status = TaskStatus.valueOf(parts[3]);
+        String description = parts[4];
+        int epicId = parts.length == 6 ? Integer.parseInt(parts[5]) : 0;
 
         Task task = switch (taskType) {
             case TASK -> new Task(name, description, status);
@@ -87,9 +88,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             return sb.append(task.getId()).append(",").append(type).append(",").append(task.getNameTask())
                     .append(",").append(task.getStatusOfTask()).append(",")
                     .append(task.getDescriptionTask()).append(", ").append(epicId).toString();
-        } else if (getEpicsMap().containsKey(task.getId())){
+        } else if (getEpicsMap().containsKey(task.getId())) {
             type = TaskType.EPIC;
-            return sb.append(task.getId()).append("," ).append(type).append(",").append(task.getNameTask())
+            return sb.append(task.getId()).append(",").append(type).append(",").append(task.getNameTask())
                     .append(",").append(task.getStatusOfTask()).append(",")
                     .append(task.getDescriptionTask()).toString();
         }
@@ -98,9 +99,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public int addTask(Task task) throws ManagerSaveException {
-            super.addTask(task);
-            save();
-            return task.getId();
+        super.addTask(task);
+        save();
+        return task.getId();
     }
 
     @Override
