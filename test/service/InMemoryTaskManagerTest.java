@@ -32,8 +32,8 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void addNewTaskTest() {
-        taskId = taskManager.addNewTask(task);
+    void addTaskTest() throws ManagerSaveException {
+        taskId = taskManager.addTask(task);
         savedTask = taskManager.getTask(taskId);
         assertNotNull(savedTask, "Задача не найдена."); //тест, в котором проверяется неизменность задачи
         assertEquals(task, savedTask, "Задачи не совпадают.");
@@ -41,8 +41,8 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void getTaskListTest() {
-        taskId = taskManager.addNewTask(task);
+    void getTaskListTest() throws ManagerSaveException {
+        taskId = taskManager.addTask(task);
         savedTask = taskManager.getTask(taskId);
         List<Task> tasks = taskManager.getTaskList();
 
@@ -51,16 +51,16 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void addNewEpicTest() {
-        epicId = taskManager.addNewEpic(epic);
+    void addEpicTest() throws ManagerSaveException {
+        epicId = taskManager.addEpic(epic);
         savedEpic = taskManager.getEpic(epicId);
         assertNotNull(savedEpic, "Задача не найдена.");
         assertEquals(epic, savedEpic, "Задачи не совпадают.");
     }
 
     @Test
-    void getEpicListTest() {
-        epicId = taskManager.addNewEpic(epic);
+    void getEpicListTest() throws ManagerSaveException {
+        epicId = taskManager.addEpic(epic);
         savedEpic = taskManager.getEpic(epicId);
         List<Epic> epics = taskManager.getEpicList();
 
@@ -69,20 +69,20 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void addNewSubtaskTest() {
-        epicId = taskManager.addNewEpic(epic);
+    void addSubtaskTest() throws ManagerSaveException {
+        epicId = taskManager.addEpic(epic);
         subtask = new Subtask("Test subtask", "Test subtask description", NEW, epicId);
-        subtaskId = taskManager.addNewSubtask(subtask);
+        subtaskId = taskManager.addSubtask(subtask);
         savedSubtask = taskManager.getSubtask(subtaskId);
         assertNotNull(savedSubtask, "Задача не найдена.");
         assertEquals(subtask, savedSubtask, "Задачи не совпадают.");
     }
 
     @Test
-    void getSubtaskListTest() {
-        epicId = taskManager.addNewEpic(epic);
+    void getSubtaskListTest() throws ManagerSaveException {
+        epicId = taskManager.addEpic(epic);
         subtask = new Subtask("Test subtask", "Test subtask description", NEW, epicId);
-        subtaskId = taskManager.addNewSubtask(subtask);
+        subtaskId = taskManager.addSubtask(subtask);
         savedSubtask = taskManager.getSubtask(subtaskId);
         List<Subtask> subtasks = taskManager.getSubtaskList();
 
@@ -91,13 +91,13 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void historyNotNull() {
-        taskId = taskManager.addNewTask(task);
+    void historyNotNull() throws ManagerSaveException {
+        taskId = taskManager.addTask(task);
         savedTask = taskManager.getTask(taskId);
-        epicId = taskManager.addNewEpic(epic);
+        epicId = taskManager.addEpic(epic);
         savedEpic = taskManager.getEpic(epicId);
         subtask = new Subtask("Test subtask", "Test subtask description", NEW, epicId);
-        subtaskId = taskManager.addNewSubtask(subtask);
+        subtaskId = taskManager.addSubtask(subtask);
         savedSubtask = taskManager.getSubtask(subtaskId);
         List<Task> history = taskManager.getHistory();
         assertNotNull(history);

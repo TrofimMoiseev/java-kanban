@@ -2,6 +2,7 @@ package model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import service.ManagerSaveException;
 import service.Managers;
 import service.TaskManager;
 
@@ -18,16 +19,16 @@ class SubtaskTest {
     Subtask savedSubtask1;
 
     @BeforeEach
-    void setUp(){
+    void setUp() throws ManagerSaveException {
         epic1 = new Epic("Test epic1", "Test epic1 description");
-        epicId = taskManager.addNewEpic(epic1);
+        epicId = taskManager.addEpic(epic1);
         subtask1 = new Subtask("Test subtask1", "Test subtask1 description", NEW , epicId);
-        subtask1Id = taskManager.addNewSubtask(subtask1);
+        subtask1Id = taskManager.addSubtask(subtask1);
         savedSubtask1 = taskManager.getSubtask(subtask1Id);
     }
 
     @Test
-    void subtaskComparisonsById() {
+    void subtaskComparisonsById() throws ManagerSaveException {
         subtask1.setNameTask("Test subtask2");
         subtask1.setDescriptionTask("Test subtask2 description");
         subtask1.setStatusOfTask(IN_PROGRESS);
@@ -38,9 +39,9 @@ class SubtaskTest {
     }
 
     @Test
-    void checkSubtaskCannotAddItselfAsSubtask() {
+    void checkSubtaskCannotAddItselfAsSubtask() throws ManagerSaveException {
         Task subtask2 = new Subtask("Test subtask1", "Test subtask1 description", NEW , subtask1Id);
-        int subtask2Id = taskManager.addNewSubtask((Subtask) subtask2);
+        int subtask2Id = taskManager.addSubtask((Subtask) subtask2);
         assertEquals(0,subtask2Id,"Ошибка, субтаск добавлен!");
     }
 }

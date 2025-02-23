@@ -22,14 +22,14 @@ class InMemoryHistoryManagerTest {
     int subtaskId;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws ManagerSaveException {
         taskManager = Managers.getDefault();
         task = new Task("Test task", "Test task description", NEW);
-        taskId = taskManager.addNewTask(task);
+        taskId = taskManager.addTask(task);
         epic = new Epic("Test epic", "Test epic description");
-        epicId = taskManager.addNewEpic(epic);
+        epicId = taskManager.addEpic(epic);
         subtask = new Subtask("Test task", "Test task description", NEW, epicId);
-        subtaskId = taskManager.addNewSubtask(subtask);
+        subtaskId = taskManager.addSubtask(subtask);
     }
 
     @Test
@@ -57,7 +57,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void deleteEpic() {
+    void deleteEpic() throws ManagerSaveException {
         taskManager.getTask(taskId);
         taskManager.getEpic(epicId);
         taskManager.getSubtask(subtaskId);
@@ -68,7 +68,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void deleteTask() {
+    void deleteTask() throws ManagerSaveException {
         taskManager.getTask(taskId);
         taskManager.getEpic(epicId);
         taskManager.getSubtask(subtaskId);
@@ -81,7 +81,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void deleteSubtask() {
+    void deleteSubtask() throws ManagerSaveException {
         taskManager.getTask(taskId);
         taskManager.getEpic(epicId);
         taskManager.getSubtask(subtaskId);
@@ -116,13 +116,13 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void deleteAllTask() {
+    void deleteAllTask() throws ManagerSaveException {
         Task task1 = new Task("Test task1", "Test task1 description", NEW);
-        int taskId1 = taskManager.addNewTask(task1);
+        int taskId1 = taskManager.addTask(task1);
         Task task2 = new Task("Test task2", "Test task2 description", NEW);
-        int taskId2 = taskManager.addNewTask(task2);
+        int taskId2 = taskManager.addTask(task2);
         Task task3 = new Task("Test task3", "Test task3 description", NEW);
-        int taskId3 = taskManager.addNewTask(task3);
+        int taskId3 = taskManager.addTask(task3);
         taskManager.getTask(taskId);
         taskManager.getTask(taskId1);
         taskManager.getTask(taskId2);
@@ -138,13 +138,13 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void deleteAllSubtask() {
+    void deleteAllSubtask() throws ManagerSaveException {
         Subtask subtask1 = new Subtask("Test task1", "Test task1 description", NEW, epicId);
-        int subtaskId1 = taskManager.addNewSubtask(subtask1);
+        int subtaskId1 = taskManager.addSubtask(subtask1);
         Subtask subtask2 = new Subtask("Test task2", "Test task2 description", NEW, epicId);
-        int subtaskId2 = taskManager.addNewSubtask(subtask2);
+        int subtaskId2 = taskManager.addSubtask(subtask2);
         Subtask subtask3 = new Subtask("Test task3", "Test task3 description", NEW, epicId);
-        int subtaskId3 = taskManager.addNewSubtask(subtask3);
+        int subtaskId3 = taskManager.addSubtask(subtask3);
         taskManager.getTask(taskId);
         taskManager.getEpic(epicId);
         taskManager.getSubtask(subtaskId);
@@ -160,13 +160,13 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void deleteAllEpic() {
+    void deleteAllEpic() throws ManagerSaveException {
         Epic epic1 = new Epic("Test epic1", "Test epic1 description");
-        int epicId1 = taskManager.addNewEpic(epic1);
+        int epicId1 = taskManager.addEpic(epic1);
         Epic epic2 = new Epic("Test epic2", "Test epic2 description");
-        int epicId2 = taskManager.addNewEpic(epic2);
+        int epicId2 = taskManager.addEpic(epic2);
         Epic epic3 = new Epic("Test epic3", "Test epic3 description");
-        int epicId3 = taskManager.addNewEpic(epic3);
+        int epicId3 = taskManager.addEpic(epic3);
         taskManager.getTask(taskId);
         taskManager.getEpic(epicId);
         taskManager.getEpic(epicId1);
