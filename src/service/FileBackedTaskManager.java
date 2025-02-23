@@ -17,9 +17,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public void save() throws ManagerSaveException {
-        if (file == null || file.exists()) {
-            throw new ManagerSaveException("Ошибка при сохранении данных в файл.");
-        }
+
         try (Writer writer = new FileWriter(file)) {
             writer.write("id,type,name,status,description,epicId" + "\n");
             for (Task task : getTasksMap().values()) {

@@ -83,24 +83,6 @@ public class FileBackedTaskManagerTest {
         assertNull(taskManager.getTask(1), "Задача должна быть удалена");
     }
 
-    @Test
-    void testManagerSaveException() {
-        // Используем несуществующий файл
-        File invalidFile = new File("non_existent_file.txt");
-
-        // Проверяем, что выбрасывается правильное исключение при сохранении
-        try {
-            FileBackedTaskManager invalidManager = Managers.getFile(invalidFile);
-            invalidManager.save();
-            fail("Ожидается исключение при сохранении в несуществующий файл");
-        } catch (ManagerSaveException e) {
-            // Проверяем, что сообщение об ошибке содержит ожидаемый текст
-            assertTrue(e.getMessage().contains("Ошибка при сохранении данных в файл"));
-        } catch (IOException e) {
-            fail("Ожидается исключение ManagerSaveException, но выброшено IOException");
-        }
-    }
-
     @AfterEach
     void tearDown() throws IOException {
         // Удаляем временный файл после выполнения тестов
