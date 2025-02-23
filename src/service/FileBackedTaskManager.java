@@ -16,7 +16,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    public void save() throws ManagerSaveException {//id,type,name,status,description,epic
+    public void save() throws ManagerSaveException {
         if (file == null || file.exists()) {
             throw new ManagerSaveException("Ошибка при сохранении данных в файл.");
         }
