@@ -44,6 +44,9 @@ public class FileBackedTaskManagerTest {
         assertEquals(TaskStatus.IN_PROGRESS, loadedManager.getEpic(epicId1).getStatusOfTask(),
                 "Статусы должны совпадать");
 
+        Task task3 = new Task("Task 2", "Description of task", TaskStatus.NEW);
+        int taskId3 = loadedManager.addTask(task3);
+        assertEquals(5, loadedManager.getTask(taskId3).getId(), "Счетчик должен продлиться");
 
 
     }
