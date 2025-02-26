@@ -4,22 +4,15 @@ import model.Epic;
 import model.Subtask;
 import model.Task;
 
-import java.util.HashMap;
 import java.util.List;
 
 public interface TaskManager {
 
-    public HashMap<Integer, Task> getTasksMap();
+    int addTask(Task task);
 
-    public HashMap<Integer, Subtask> getSubtasksMap();
+    int addSubtask(Subtask subtask);
 
-    public HashMap<Integer, Epic> getEpicsMap();
-
-    int addTask(Task task) throws ManagerSaveException;
-
-    int addSubtask(Subtask subtask) throws ManagerSaveException;
-
-    int addEpic(Epic epic) throws ManagerSaveException;
+    int addEpic(Epic epic);
 
     List<Task> getTaskList();
 
@@ -27,11 +20,11 @@ public interface TaskManager {
 
     List<Epic> getEpicList();
 
-    void clearTask() throws ManagerSaveException;
+    void clearTask();
 
-    void clearSubtask() throws ManagerSaveException;
+    void clearSubtask();
 
-    void clearEpic() throws ManagerSaveException;
+    void clearEpic();
 
     Task getTask(int id);
 
@@ -39,19 +32,19 @@ public interface TaskManager {
 
     Epic getEpic(int id);
 
-    void updateTask(Task task) throws ManagerSaveException;
+    void updateTask(Task task);
 
-    void updateSubtask(Subtask subtask) throws ManagerSaveException;
+    void updateSubtask(Subtask subtask);
 
-    void updateEpic(Epic epic1) throws ManagerSaveException;
+    void updateEpic(Epic epic1);
 
-    void deleteTaskById(int id) throws ManagerSaveException;
+    void deleteTaskById(int id);
 
-    void deleteSubtaskById(int id) throws ManagerSaveException;
+    void deleteSubtaskById(int id);
 
-    void deleteEpicById(int id) throws ManagerSaveException;
+    void deleteEpicById(int id);
 
     List<Subtask> getSubtaskListByEpicId(int id);
 
-    public List<Task> getHistory();
+    List<Task> getHistory();
 }

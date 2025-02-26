@@ -32,7 +32,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void addTaskTest() throws ManagerSaveException {
+    void addTaskTest() {
         taskId = taskManager.addTask(task);
         savedTask = taskManager.getTask(taskId);
         assertNotNull(savedTask, "Задача не найдена."); //тест, в котором проверяется неизменность задачи
@@ -41,7 +41,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void getTaskListTest() throws ManagerSaveException {
+    void getTaskListTest() {
         taskId = taskManager.addTask(task);
         savedTask = taskManager.getTask(taskId);
         List<Task> tasks = taskManager.getTaskList();
@@ -51,7 +51,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void addEpicTest() throws ManagerSaveException {
+    void addEpicTest() {
         epicId = taskManager.addEpic(epic);
         savedEpic = taskManager.getEpic(epicId);
         assertNotNull(savedEpic, "Задача не найдена.");
@@ -59,7 +59,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void getEpicListTest() throws ManagerSaveException {
+    void getEpicListTest() {
         epicId = taskManager.addEpic(epic);
         savedEpic = taskManager.getEpic(epicId);
         List<Epic> epics = taskManager.getEpicList();
@@ -69,7 +69,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void addSubtaskTest() throws ManagerSaveException {
+    void addSubtaskTest() {
         epicId = taskManager.addEpic(epic);
         subtask = new Subtask("Test subtask", "Test subtask description", NEW, epicId);
         subtaskId = taskManager.addSubtask(subtask);
@@ -79,7 +79,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void getSubtaskListTest() throws ManagerSaveException {
+    void getSubtaskListTest() {
         epicId = taskManager.addEpic(epic);
         subtask = new Subtask("Test subtask", "Test subtask description", NEW, epicId);
         subtaskId = taskManager.addSubtask(subtask);
@@ -91,7 +91,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    void historyNotNull() throws ManagerSaveException {
+    void historyNotNull() {
         taskId = taskManager.addTask(task);
         savedTask = taskManager.getTask(taskId);
         epicId = taskManager.addEpic(epic);

@@ -13,58 +13,27 @@ public class InMemoryTaskManager implements TaskManager {
         this.historyManager = historyManager;
     }
 
-    private int sequenceTask = 0;
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
+    protected int sequenceTask = 0;
+    protected final HashMap<Integer, Task> tasks = new HashMap<>();
+    protected final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    protected final HashMap<Integer, Epic> epics = new HashMap<>();
 
-    private int getSequence() {  //Счетчик задач
+    protected int getSequence() {  //Счетчик задач
         sequenceTask++;
         return sequenceTask;
     }
 
-    private void setSequence(int newSequenceTask) {
-        if (newSequenceTask > sequenceTask) {
-            sequenceTask = newSequenceTask;
-        }
-    }
-
-
     @Override
-    public HashMap<Integer, Task> getTasksMap() {
-        return tasks;
-    }
-
-    @Override
-    public HashMap<Integer, Subtask> getSubtasksMap() {
-        return subtasks;
-    }
-
-    @Override
-    public HashMap<Integer, Epic> getEpicsMap() {
-        return epics;
-    }
-
-    @Override
-    public int addTask(Task task) throws ManagerSaveException { //Добавление задач в мапу
-        if (task.getId() == 0) {
-            task.setId(getSequence());
-        } else {
-            setSequence(task.getId());
-        }
+    public int addTask(Task task) { //Добавление задач в мапу
+        task.setId(getSequence());
         tasks.put(task.getId(), task);
         return task.getId();
     }
 
     @Override
-    public int addSubtask(Subtask subtask) throws ManagerSaveException {
-
+    public int addSubtask(Subtask subtask) {
         if (epics.containsKey(subtask.getEpicId())) {
-            if (subtask.getId() == 0) {
-                subtask.setId(getSequence());
-            } else {
-                setSequence(subtask.getId());
-            }
+            subtask.setId(getSequence());
             subtasks.put(subtask.getId(), subtask);
             epics.get(subtask.getEpicId()).addNewSubtaskOnList(subtask);
             epics.get(subtask.getEpicId()).updateEpicStatus();
@@ -75,12 +44,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public int addEpic(Epic epic) throws ManagerSaveException {
-        if (epic.getId() == 0) {
-            epic.setId(getSequence());
-        } else {
-            setSequence(epic.getId());
-        }
+    public int addEpic(Epic epic) {
+        epic.setId(getSequence());
         epics.put(epic.getId(), epic);
         return epic.getId();
     }
@@ -101,7 +66,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void clearTask() throws ManagerSaveException { //Очистка мап
+    public void clearTask() { //Очистка мап
         for (Task task : tasks.values()) {
             historyManager.remove(task.getId());
         }
@@ -109,7 +74,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void clearSubtask() throws ManagerSaveException {
+    public void clearSubtask() {
         for (Subtask subtask : subtasks.values()) {
             historyManager.remove(subtask.getId());
         }
@@ -121,7 +86,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void clearEpic() throws ManagerSaveException {
+    public void clearEpic() {
         for (Epic epic : epics.values()) {
             historyManager.remove(epic.getId());
         }
@@ -153,7 +118,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task task) throws ManagerSaveException { //Обновление задач
+    public void updateTask(Task task) { //Обновление задач
         if (tasks.containsKey(task.getId())) {
             tasks.put(task.getId(), task);
         } else {
@@ -162,7 +127,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) throws ManagerSaveException {
+    public void updateSubtask(Subtask subtask) {
         if (subtasks.containsKey(subtask.getId())) {
             subtasks.put(subtask.getId(), subtask);
             epics.get(subtask.getEpicId()).updateSubtaskList(subtask);
@@ -173,7 +138,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateEpic(Epic epic1) throws ManagerSaveException {
+    public void updateEpic(Epic epic1) {
         if (epics.containsKey(epic1.getId())) {
             epics.get(epic1.getId()).setNameTask(epic1.getNameTask());
             epics.get(epic1.getId()).setDescriptionTask(epic1.getDescriptionTask());
@@ -183,13 +148,13 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteTaskById(int id) throws ManagerSaveException { //Удаление по id
+    public void deleteTaskById(int id) { //Удаление по id
         historyManager.remove(id);
         tasks.remove(id);
     }
 
     @Override
-    public void deleteSubtaskById(int id) throws ManagerSaveException { //Удаление субтасков из листа эпика и мапы
+    public void deleteSubtaskById(int id) { //Удаление субтасков из листа эпика и мапы
         if (subtasks.containsKey(id)) {
             epics.get(subtasks.get(id).getEpicId()).deleteSubtaskFromList(subtasks.get(id));
             epics.get(subtasks.get(id).getEpicId()).updateEpicStatus();
@@ -201,7 +166,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteEpicById(int id) throws ManagerSaveException { //Удаление эпиков, очистка субтасков эпика из листа и мапы
+    public void deleteEpicById(int id) { //Удаление эпиков, очистка субтасков эпика из листа и мапы
         if (epics.containsKey(id)) {
             for (Subtask subtask : epics.get(id).getSubtaskList()) {
                 historyManager.remove(subtask.getId());

@@ -23,11 +23,10 @@ class ManagersTest {
     }
 
     @Test
-    void getFile() throws IOException, ManagerSaveException {
-        // Создание временного файла для тестов
+    void getFile() throws IOException {
         File tempFile = Files.createTempFile("testFile", ".txt").toFile();
-        tempFile.deleteOnExit(); // Удалим файл по завершению тестов
-        FileBackedTaskManager fileBackedTaskManager = Managers.getFile(tempFile);
+        tempFile.deleteOnExit();
+        FileBackedTaskManager fileBackedTaskManager = Managers.getDefaultFile(tempFile);
         assertNotNull(fileBackedTaskManager);
     }
 }

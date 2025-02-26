@@ -1,14 +1,13 @@
 package service;
 
 import java.io.File;
-import java.io.IOException;
 
 public class Managers {
     public static TaskManager getDefault() {
         return new InMemoryTaskManager(getDefaultHistory());
     }
 
-    public static FileBackedTaskManager getFile(File file) throws IOException, ManagerSaveException {
+    public static FileBackedTaskManager getDefaultFile(File file) {
         return new FileBackedTaskManager(getDefaultHistory(), file);
     }
 
