@@ -47,7 +47,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 if (task instanceof Subtask) {
                     fileBackedTaskManager.subtasks.put(task.getId(), (Subtask) task);
                     fileBackedTaskManager.epics.get(((Subtask) task).getEpicId()).addNewSubtaskOnList((Subtask) task);
-                    fileBackedTaskManager.epics.get(((Subtask) task).getEpicId()).updateEpicStatus();
                 } else if (task instanceof Epic) {
                     fileBackedTaskManager.epics.put(task.getId(), (Epic) task);
                 } else {
@@ -76,6 +75,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             case SUBTASK -> new Subtask(name, description, status, epicId);
         };
         task.setId(id);
+        task.setStatusOfTask(status);
         return task;
     }
 

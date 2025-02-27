@@ -27,7 +27,7 @@ public class FileBackedTaskManagerTest {
         Task task1 = new Task("Task 1", "Description of task", TaskStatus.NEW);
         Epic epic1 = new Epic("Epic 1", "Description of epic");
         Task task2 = new Task("Task 2", "Description of task", TaskStatus.NEW);
-        taskManager.addTask(task1);
+        int taskId1 = taskManager.addTask(task1);
         int epicId1 = taskManager.addEpic(epic1);
         taskManager.addTask(task2);
         Subtask subtask1 = new Subtask("Subtask 1", "Description of task",
@@ -36,8 +36,17 @@ public class FileBackedTaskManagerTest {
         FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tempFile);
 
         assertEquals(taskManager.getTaskList(), loadedManager.getTaskList(), "Tasks должны быть одинаковыми");
+        assertEquals(taskManager.getTask(taskId1).getNameTask(),loadedManager.getTask(taskId1).getNameTask(), "Имена должны совпадать");
+        assertEquals(taskManager.getTask(taskId1).getDescriptionTask(),loadedManager.getTask(taskId1).getDescriptionTask(), "Описание должны совпадать");
+        assertEquals(taskManager.getTask(taskId1).getStatusOfTask(),loadedManager.getTask(taskId1).getStatusOfTask(), "Статусы должны совпадать");
         assertEquals(taskManager.getEpicList(), loadedManager.getEpicList(), "SubTasks должны быть одинаковыми");
+        assertEquals(taskManager.getEpic(epicId1).getNameTask(),loadedManager.getEpic(epicId1).getNameTask(), "Имена должны совпадать");
+        assertEquals(taskManager.getEpic(epicId1).getDescriptionTask(),loadedManager.getEpic(epicId1).getDescriptionTask(), "Описание должны совпадать");
+        assertEquals(taskManager.getEpic(epicId1).getStatusOfTask(),loadedManager.getEpic(epicId1).getStatusOfTask(), "Статусы должны совпадать");
         assertEquals(taskManager.getSubtaskList(), loadedManager.getSubtaskList(), "Epics должны быть одинаковыми");
+        assertEquals(taskManager.getSubtask(subtaskId1).getNameTask(),loadedManager.getSubtask(subtaskId1).getNameTask(), "Имена должны совпадать");
+        assertEquals(taskManager.getSubtask(subtaskId1).getDescriptionTask(),loadedManager.getSubtask(subtaskId1).getDescriptionTask(), "Описание должны совпадать");
+        assertEquals(taskManager.getSubtask(subtaskId1).getStatusOfTask(),loadedManager.getSubtask(subtaskId1).getStatusOfTask(), "Статусы должны совпадать");
         assertEquals(loadedManager.getSubtask(subtaskId1).getEpicId(), epicId1, "Поля должны совпадать");
         assertEquals(taskManager.getEpic(epicId1).getSubtaskList(), loadedManager.getEpic(epicId1).getSubtaskList(),
                 "Субтакслисты должны совпадать");
