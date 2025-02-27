@@ -2,6 +2,7 @@ package model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import service.ManagerSaveException;
 import service.Managers;
 import service.TaskManager;
 
@@ -16,14 +17,14 @@ class TaskTest {
     int taskId;
 
     @BeforeEach
-    void setUp(){
+    void setUp() throws ManagerSaveException {
         task1 = new Task("Test task1", "Test task1 description", NEW);
-        taskId = taskManager.addNewTask(task1);
+        taskId = taskManager.addTask(task1);
         savedTask = taskManager.getTask(taskId);
     }
 
     @Test
-    void taskComparisonsById() {
+    void taskComparisonsById() throws ManagerSaveException {
         task1.setNameTask("Test task2");
         task1.setDescriptionTask("Test task2 description");
         task1.setStatusOfTask(IN_PROGRESS);

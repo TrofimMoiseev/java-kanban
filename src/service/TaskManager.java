@@ -7,11 +7,12 @@ import model.Task;
 import java.util.List;
 
 public interface TaskManager {
-    int addNewTask(Task task);
 
-    int addNewSubtask(Subtask subtask);
+    int addTask(Task task);
 
-    int addNewEpic(Epic epic);
+    int addSubtask(Subtask subtask);
+
+    int addEpic(Epic epic);
 
     List<Task> getTaskList();
 
@@ -45,5 +46,5 @@ public interface TaskManager {
 
     List<Subtask> getSubtaskListByEpicId(int id);
 
-    public List<Task> getHistory();
+    List<Task> getHistory();
 }

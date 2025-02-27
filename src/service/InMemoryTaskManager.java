@@ -13,25 +13,25 @@ public class InMemoryTaskManager implements TaskManager {
         this.historyManager = historyManager;
     }
 
-    private int sequenceTask = 0;
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
+    protected int sequenceTask = 0;
+    protected final HashMap<Integer, Task> tasks = new HashMap<>();
+    protected final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    protected final HashMap<Integer, Epic> epics = new HashMap<>();
 
-    private int getSequence() {  //Счетчик задач
+    protected int getSequence() {  //Счетчик задач
         sequenceTask++;
         return sequenceTask;
     }
 
     @Override
-    public int addNewTask(Task task) { //Добавление задач в мапу
+    public int addTask(Task task) { //Добавление задач в мапу
         task.setId(getSequence());
         tasks.put(task.getId(), task);
         return task.getId();
     }
 
     @Override
-    public int addNewSubtask(Subtask subtask) {
+    public int addSubtask(Subtask subtask) {
         if (epics.containsKey(subtask.getEpicId())) {
             subtask.setId(getSequence());
             subtasks.put(subtask.getId(), subtask);
@@ -44,7 +44,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public int addNewEpic(Epic epic) {
+    public int addEpic(Epic epic) {
         epic.setId(getSequence());
         epics.put(epic.getId(), epic);
         return epic.getId();
