@@ -1,14 +1,18 @@
 package model;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Optional;
 
 public class Epic extends Task {
     private final ArrayList<Subtask> subtaskList = new ArrayList<>();
+    private LocalDateTime endTime;
 
     public Epic(String nameTask, String descriptionTask) {
-        super(nameTask, descriptionTask);
+        super(nameTask, descriptionTask, 0L, null);
         this.statusOfTask = TaskStatus.NEW;
-
     }
 
     public void addNewSubtaskOnList(Subtask subtask) {
@@ -23,7 +27,7 @@ public class Epic extends Task {
         subtaskList.clear();
     }
 
-    public  void updateSubtaskList(Subtask subtask) {
+    public void updateSubtaskList(Subtask subtask) {
         subtaskList.remove(subtask);
         subtaskList.add(subtask);
     }
@@ -49,6 +53,42 @@ public class Epic extends Task {
                 setStatusOfTask(TaskStatus.IN_PROGRESS);
             }
         }
+    }
+
+    public void updateEpicDuration() {
+        long durationSum = 0L;
+        if (subtaskList.isEmpty()) {
+            setDuration(Duration.ofMinutes(durationSum));
+        } else {
+            for (Subtask subtask : subtaskList) {
+                durationSum = durationSum + subtask.duration.toMinutes();
+            }
+            setDuration(Duration.ofMinutes(durationSum));
+        }
+    }
+
+    public void updateEpicStartTime() {
+        Optional<Subtask> startTimeSubtask = subtaskList.stream().min(Comparator.comparing(Subtask::getStartTime));
+        startTimeSubtask.ifPresent(subtask -> setStartTime(subtask.getStartTime()));
+    }
+
+    public void updateEpicEndTime() {
+
+        setEndTime(startTime.plus(duration));
+    }
+
+    public void updateEpicTime() {
+        updateEpicStartTime();
+        updateEpicDuration();
+        updateEpicEndTime();
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
     public ArrayList<Subtask> getSubtaskList() {

@@ -3,12 +3,14 @@ package service;
 import model.*;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private final File file;
-    private static final String HEADER = "id,type,name,status,description,epicId";
+    private static final String HEADER = "id,type,name,status,description,duration,startTime,epicId";
 
     public FileBackedTaskManager(HistoryManager historyManager, File file) throws ManagerSaveException {
         super(historyManager);
@@ -60,30 +62,38 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return fileBackedTaskManager;
     }
 
-    private static Task fromString(String value) { //id,type,name,status,description,epic
+    private static Task fromString(String value) { //id,type,name,status,description, duration, startTime, epic
         String[] parts = value.split(",");
         int id = Integer.parseInt(parts[0]);
         TaskType taskType = TaskType.valueOf(parts[1]);
         String name = parts[2];
         TaskStatus status = TaskStatus.valueOf(parts[3]);
         String description = parts[4];
-        int epicId = parts.length == 6 ? Integer.parseInt(parts[5]) : 0;
+        Duration duration = parts[5].isEmpty() ? null : Duration.parse(parts[5]);
+        LocalDateTime startTime = parts[6].isEmpty() ? null : LocalDateTime.parse(parts[6]);
+        int epicId = parts.length == 8 ? Integer.parseInt(parts[7]) : 0;
 
         Task task = switch (taskType) {
-            case TASK -> new Task(name, description, status);
+            case TASK -> new Task(name, description, status, 0L, null);
             case EPIC -> new Epic(name, description);
-            case SUBTASK -> new Subtask(name, description, status, epicId);
+            case SUBTASK -> new Subtask(name, description, status, 0L, null, epicId);
         };
         task.setId(id);
         task.setStatusOfTask(status);
+        task.setDuration(duration);
+        task.setStartTime(startTime);
         return task;
     }
 
     private String toString(Task task) { //id,type,name,status,description,epic
         StringBuilder sb = new StringBuilder();
-        sb.append(task.getId()).append(",").append(task.getType()).append(",").append(task.getNameTask())
-                .append(",").append(task.getStatusOfTask()).append(",")
-                .append(task.getDescriptionTask());
+        sb.append(task.getId())
+                .append(",").append(task.getType())
+                .append(",").append(task.getNameTask())
+                .append(",").append(task.getStatusOfTask())
+                .append(",").append(task.getDescriptionTask())
+                .append(",").append(task.getDuration())
+                .append(",").append(task.getStartTime());
         if (task.getType() == TaskType.SUBTASK) {
             int epicId = subtasks.get(task.getId()).getEpicId();
             sb.append(",").append(epicId);

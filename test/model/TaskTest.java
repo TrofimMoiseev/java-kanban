@@ -6,6 +6,8 @@ import service.ManagerSaveException;
 import service.Managers;
 import service.TaskManager;
 
+import java.time.LocalDateTime;
+
 import static model.TaskStatus.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +20,7 @@ class TaskTest {
 
     @BeforeEach
     void setUp() throws ManagerSaveException {
-        task1 = new Task("Test task1", "Test task1 description", NEW);
+        task1 = new Task("Test task1", "Test task1 description", NEW, 5L, LocalDateTime.of(2025, 3, 16, 10, 30, 0));
         taskId = taskManager.addTask(task1);
         savedTask = taskManager.getTask(taskId);
     }
