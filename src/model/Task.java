@@ -22,7 +22,7 @@ public class Task {
         this.startTime = startTime;
     }
 
-    public Task(String nameTask, String descriptionTask , Long minutes, LocalDateTime startTime) {
+    public Task(String nameTask, String descriptionTask, Long minutes, LocalDateTime startTime) {
         this.nameTask = nameTask;
         this.descriptionTask = descriptionTask;
         this.statusOfTask = TaskStatus.NEW;
