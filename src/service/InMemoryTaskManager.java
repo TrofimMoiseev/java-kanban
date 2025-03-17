@@ -82,7 +82,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearTask() { //Очистка мап
-        tasks.values().stream().forEach(task -> {
+        tasks.values().forEach(task -> {
             historyManager.remove(task.getId());
             prioritizedTasks.remove(task);
         });
@@ -91,12 +91,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearSubtask() {
-        subtasks.values().stream().forEach(subtask -> {
+        subtasks.values().forEach(subtask -> {
             historyManager.remove(subtask.getId());
             prioritizedTasks.remove(subtask);
         });
         subtasks.clear();
-        epics.values().stream().forEach(epic -> {
+        epics.values().forEach(epic -> {
             epic.clearSubtaskFromList();
             epic.updateEpicStatus();
             epic.updateEpicTime();
@@ -105,8 +105,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearEpic() {
-        epics.values().stream().forEach(epic -> historyManager.remove(epic.getId()));
-        subtasks.values().stream().forEach(subtask -> {
+        epics.values().forEach(epic -> historyManager.remove(epic.getId()));
+        subtasks.values().forEach(subtask -> {
             historyManager.remove(subtask.getId());
             prioritizedTasks.remove(subtask);
         });
@@ -139,7 +139,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (tasks.containsKey(task.getId()) && getPrioritizedTasks().stream()
                 .filter(oldTask -> oldTask.getId() != (task.getId()))
                 .noneMatch(oldTask -> timeValidation(oldTask, task))) {
+            prioritizedTasks.remove(task);
             tasks.put(task.getId(), task);
+            prioritizedTasks.add(task);
         } else {
             System.out.println("Задача не найдена");
         }
@@ -176,12 +178,14 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTaskById(int id) { //Удаление по id
         historyManager.remove(id);
+        prioritizedTasks.remove(tasks.get(id));
         tasks.remove(id);
     }
 
     @Override
     public void deleteSubtaskById(int id) { //Удаление субтасков из листа эпика и мапы
         if (subtasks.containsKey(id)) {
+            prioritizedTasks.remove(tasks.get(id));
             Epic epic = epics.get(subtasks.get(id).getEpicId());
             epic.deleteSubtaskFromList(subtasks.get(id));
             epic.updateEpicStatus();
@@ -198,6 +202,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epics.containsKey(id)) {
             for (Subtask subtask : epics.get(id).getSubtaskList()) {
                 historyManager.remove(subtask.getId());
+                prioritizedTasks.remove(subtask);
                 subtasks.remove(subtask.getId());
             }
             historyManager.remove(id);
