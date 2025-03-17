@@ -81,7 +81,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             case SUBTASK -> new Subtask(name, description, status, duration, startTime, epicId);
         };
         task.setId(id);
-        if(task instanceof Epic) {
+        if (task instanceof Epic) {
             task.setStatusOfTask(status);
             task.setDuration(duration);
             task.setStartTime(startTime);
