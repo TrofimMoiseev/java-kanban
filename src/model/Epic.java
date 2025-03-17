@@ -11,7 +11,7 @@ public class Epic extends Task {
     private LocalDateTime endTime;
 
     public Epic(String nameTask, String descriptionTask) {
-        super(nameTask, descriptionTask, 0L, null);
+        super(nameTask, descriptionTask, null, null);
         this.statusOfTask = TaskStatus.NEW;
     }
 
@@ -55,7 +55,7 @@ public class Epic extends Task {
         }
     }
 
-    public void updateEpicDuration() {
+    private void updateEpicDuration() {
         long durationSum = 0L;
         if (subtaskList.isEmpty()) {
             setDuration(Duration.ofMinutes(durationSum));
@@ -67,14 +67,15 @@ public class Epic extends Task {
         }
     }
 
-    public void updateEpicStartTime() {
+    private void updateEpicStartTime() {
         Optional<Subtask> startTimeSubtask = subtaskList.stream().min(Comparator.comparing(Subtask::getStartTime));
         startTimeSubtask.ifPresent(subtask -> setStartTime(subtask.getStartTime()));
     }
 
-    public void updateEpicEndTime() {
+    private void updateEpicEndTime() {
 
-        setEndTime(startTime.plus(duration));
+        Optional<Subtask> endTimeSubtask = subtaskList.stream().max(Comparator.comparing(Subtask::getEndTime));
+        endTimeSubtask.ifPresent(subtask -> setEndTime(subtask.getEndTime()));
     }
 
     public void updateEpicTime() {

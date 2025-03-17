@@ -6,6 +6,7 @@ import model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,16 +22,18 @@ class InMemoryHistoryManagerTest {
     int taskId;
     int epicId;
     int subtaskId;
+    Duration duration;
 
     @BeforeEach
     void setUp() throws ManagerSaveException {
+        duration = Duration.ofMinutes(5L);
         taskManager = Managers.getDefault();
-        task = new Task("Test task", "Test task description", NEW, 5L,
+        task = new Task("Test task", "Test task description", NEW, duration,
                 LocalDateTime.of(2025, 3, 16, 10, 30, 0));
         taskId = taskManager.addTask(task);
         epic = new Epic("Test epic", "Test epic description");
         epicId = taskManager.addEpic(epic);
-        subtask = new Subtask("Test task", "Test task description", NEW, 5L,
+        subtask = new Subtask("Test task", "Test task description", NEW, duration,
                 LocalDateTime.of(2025, 3, 16, 10, 40, 0), epicId);
         subtaskId = taskManager.addSubtask(subtask);
     }
@@ -120,13 +123,13 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void deleteAllTask() throws ManagerSaveException {
-        Task task1 = new Task("Test task1", "Test task1 description", NEW, 5L,
+        Task task1 = new Task("Test task1", "Test task1 description", NEW, duration,
                 LocalDateTime.of(2025, 3, 16, 10, 30, 0));
         int taskId1 = taskManager.addTask(task1);
-        Task task2 = new Task("Test task2", "Test task2 description", NEW, 5L,
+        Task task2 = new Task("Test task2", "Test task2 description", NEW, duration,
                 LocalDateTime.of(2025, 3, 16, 10, 40, 0));
         int taskId2 = taskManager.addTask(task2);
-        Task task3 = new Task("Test task3", "Test task3 description", NEW, 5L,
+        Task task3 = new Task("Test task3", "Test task3 description", NEW, duration,
                 LocalDateTime.of(2025, 3, 16, 10, 50, 0));
         int taskId3 = taskManager.addTask(task3);
         taskManager.getTask(taskId);
@@ -145,13 +148,13 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void deleteAllSubtask() throws ManagerSaveException {
-        Subtask subtask1 = new Subtask("Test task1", "Test task1 description", NEW, 5L,
+        Subtask subtask1 = new Subtask("Test task1", "Test task1 description", NEW, duration,
                 LocalDateTime.of(2025, 3, 16, 10, 30, 0), epicId);
         int subtaskId1 = taskManager.addSubtask(subtask1);
-        Subtask subtask2 = new Subtask("Test task2", "Test task2 description", NEW, 5L,
+        Subtask subtask2 = new Subtask("Test task2", "Test task2 description", NEW, duration,
                 LocalDateTime.of(2025, 3, 16, 10, 40, 0), epicId);
         int subtaskId2 = taskManager.addSubtask(subtask2);
-        Subtask subtask3 = new Subtask("Test task3", "Test task3 description", NEW, 5L,
+        Subtask subtask3 = new Subtask("Test task3", "Test task3 description", NEW, duration,
                 LocalDateTime.of(2025, 3, 16, 10, 50, 0), epicId);
         int subtaskId3 = taskManager.addSubtask(subtask3);
         taskManager.getTask(taskId);

@@ -44,9 +44,10 @@ public class InMemoryTaskManager implements TaskManager {
             subtask.setId(getSequence());
             subtasks.put(subtask.getId(), subtask);
             prioritizedTasks.add(subtask);
-            epics.get(subtask.getEpicId()).addNewSubtaskOnList(subtask);
-            epics.get(subtask.getEpicId()).updateEpicStatus();
-            epics.get(subtask.getEpicId()).updateEpicTime();
+            Epic epic = epics.get(subtask.getEpicId());
+            epic.addNewSubtaskOnList(subtask);
+            epic.updateEpicStatus();
+            epic.updateEpicTime();
             return subtask.getId();
         }
         return 0;
@@ -81,13 +82,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearTask() { //Очистка мап
-        tasks.values().stream().forEach(task -> historyManager.remove(task.getId()));
+        tasks.values().stream().forEach(task -> {
+            historyManager.remove(task.getId());
+            prioritizedTasks.remove(task);
+        });
         tasks.clear();
     }
 
     @Override
     public void clearSubtask() {
-        subtasks.values().stream().forEach(subtask -> historyManager.remove(subtask.getId()));
+        subtasks.values().stream().forEach(subtask -> {
+            historyManager.remove(subtask.getId());
+            prioritizedTasks.remove(subtask);
+        });
         subtasks.clear();
         epics.values().stream().forEach(epic -> {
             epic.clearSubtaskFromList();
@@ -99,7 +106,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void clearEpic() {
         epics.values().stream().forEach(epic -> historyManager.remove(epic.getId()));
-        subtasks.values().stream().forEach(subtask -> historyManager.remove(subtask.getId()));
+        subtasks.values().stream().forEach(subtask -> {
+            historyManager.remove(subtask.getId());
+            prioritizedTasks.remove(subtask);
+        });
         epics.clear();
         subtasks.clear();
     }
@@ -126,7 +136,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task task) { //Обновление задач
-        if (tasks.containsKey(task.getId())) {
+        if (tasks.containsKey(task.getId()) && getPrioritizedTasks().stream()
+                .filter(oldTask -> oldTask.getId() != (task.getId()))
+                .noneMatch(oldTask -> timeValidation(oldTask, task))) {
             tasks.put(task.getId(), task);
         } else {
             System.out.println("Задача не найдена");
@@ -135,11 +147,16 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(Subtask subtask) {
-        if (subtasks.containsKey(subtask.getId())) {
+        if (subtasks.containsKey(subtask.getId()) && getPrioritizedTasks().stream()
+                .filter(oldTask -> oldTask.getId() != (subtask.getId()))
+                .noneMatch(oldTask -> timeValidation(oldTask, subtask))) {
+            prioritizedTasks.remove(subtask);
             subtasks.put(subtask.getId(), subtask);
-            epics.get(subtask.getEpicId()).updateSubtaskList(subtask);
-            epics.get(subtask.getEpicId()).updateEpicStatus();
-            epics.get(subtask.getEpicId()).updateEpicTime();
+            prioritizedTasks.add(subtask);
+            Epic epic = epics.get(subtask.getEpicId());
+            epic.updateSubtaskList(subtask);
+            epic.updateEpicStatus();
+            epic.updateEpicTime();
 
         } else {
             System.out.println("Задача не найдена");
@@ -165,9 +182,10 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteSubtaskById(int id) { //Удаление субтасков из листа эпика и мапы
         if (subtasks.containsKey(id)) {
-            epics.get(subtasks.get(id).getEpicId()).deleteSubtaskFromList(subtasks.get(id));
-            epics.get(subtasks.get(id).getEpicId()).updateEpicStatus();
-            epics.get(subtasks.get(id).getEpicId()).updateEpicTime();
+            Epic epic = epics.get(subtasks.get(id).getEpicId());
+            epic.deleteSubtaskFromList(subtasks.get(id));
+            epic.updateEpicStatus();
+            epic.updateEpicTime();
             subtasks.remove(id);
             historyManager.remove(id);
         } else {
