@@ -3,12 +3,14 @@ package service;
 import model.*;
 
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private final File file;
-    private static final String HEADER = "id,type,name,status,description,epicId";
+    private static final String HEADER = "id,type,name,status,description,duration,startTime,endTime,epicId";
 
     public FileBackedTaskManager(HistoryManager historyManager, File file) throws ManagerSaveException {
         super(historyManager);
@@ -46,12 +48,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 }
                 if (task instanceof Subtask) {
                     fileBackedTaskManager.subtasks.put(task.getId(), (Subtask) task);
+                    fileBackedTaskManager.prioritizedTasks.add(task);
                     fileBackedTaskManager.epics.get(((Subtask) task).getEpicId()).addNewSubtaskOnList((Subtask) task);
                 } else if (task instanceof Epic) {
                     fileBackedTaskManager.epics.put(task.getId(), (Epic) task);
                 } else {
                     fileBackedTaskManager.tasks.put(task.getId(), task);
-
+                    fileBackedTaskManager.prioritizedTasks.add(task);
                 }
             }
         } catch (IOException e) {
@@ -60,34 +63,48 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return fileBackedTaskManager;
     }
 
-    private static Task fromString(String value) { //id,type,name,status,description,epic
+    private static Task fromString(String value) { //id,type,name,status,description, duration, startTime, endTime, epicId
         String[] parts = value.split(",");
         int id = Integer.parseInt(parts[0]);
         TaskType taskType = TaskType.valueOf(parts[1]);
         String name = parts[2];
         TaskStatus status = TaskStatus.valueOf(parts[3]);
         String description = parts[4];
-        int epicId = parts.length == 6 ? Integer.parseInt(parts[5]) : 0;
+        Duration duration = parts[5].isEmpty() ? null : Duration.parse(parts[5]);
+        LocalDateTime startTime = parts[6].isEmpty() ? null : LocalDateTime.parse(parts[6]);
+        LocalDateTime endTime = parts[7].isEmpty() ? null : LocalDateTime.parse(parts[7]);
+        int epicId = parts.length == 9 ? Integer.parseInt(parts[8]) : 0;
 
         Task task = switch (taskType) {
-            case TASK -> new Task(name, description, status);
+            case TASK -> new Task(name, description, status, duration, startTime);
             case EPIC -> new Epic(name, description);
-            case SUBTASK -> new Subtask(name, description, status, epicId);
+            case SUBTASK -> new Subtask(name, description, status, duration, startTime, epicId);
         };
         task.setId(id);
-        task.setStatusOfTask(status);
+        if (task instanceof Epic) {
+            task.setStatusOfTask(status);
+            task.setDuration(duration);
+            task.setStartTime(startTime);
+            ((Epic) task).setEndTime(endTime);
+        }
         return task;
     }
 
     private String toString(Task task) { //id,type,name,status,description,epic
         StringBuilder sb = new StringBuilder();
-        sb.append(task.getId()).append(",").append(task.getType()).append(",").append(task.getNameTask())
-                .append(",").append(task.getStatusOfTask()).append(",")
-                .append(task.getDescriptionTask());
+        sb.append(task.getId())
+                .append(",").append(task.getType())
+                .append(",").append(task.getNameTask())
+                .append(",").append(task.getStatusOfTask())
+                .append(",").append(task.getDescriptionTask())
+                .append(",").append(task.getDuration())
+                .append(",").append(task.getStartTime())
+                .append(",").append(task.getEndTime());
         if (task.getType() == TaskType.SUBTASK) {
             int epicId = subtasks.get(task.getId()).getEpicId();
             sb.append(",").append(epicId);
         }
+
         return sb.toString();
     }
 

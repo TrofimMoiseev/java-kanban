@@ -35,7 +35,7 @@ class EpicTest {
     }
 
     @Test
-    void checkEpicCannotAddItselfAsSubtask() { //Сомневаюсь что его так нужно юзать, но кажется работает
+    void checkEpicCannotAddItselfAsSubtask() {
         assertThrows(RuntimeException.class, () -> {
             Task fakeEpic2 = new Epic("Test fakeEpic2", "Test fakeEpic2 description");
             int fakeEpicId2 = taskManager.addSubtask((Subtask) fakeEpic2);

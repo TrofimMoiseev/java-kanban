@@ -6,6 +6,9 @@ import service.ManagerSaveException;
 import service.Managers;
 import service.TaskManager;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 import static model.TaskStatus.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,12 +20,14 @@ class SubtaskTest {
     Subtask subtask1;
     int subtask1Id;
     Subtask savedSubtask1;
+    Duration duration;
 
     @BeforeEach
     void setUp() throws ManagerSaveException {
+        duration = Duration.ofMinutes(5L);
         epic1 = new Epic("Test epic1", "Test epic1 description");
         epicId = taskManager.addEpic(epic1);
-        subtask1 = new Subtask("Test subtask1", "Test subtask1 description", NEW , epicId);
+        subtask1 = new Subtask("Test subtask1", "Test subtask1 description", NEW, duration, LocalDateTime.of(2025, 3, 16, 10, 30, 0), epicId);
         subtask1Id = taskManager.addSubtask(subtask1);
         savedSubtask1 = taskManager.getSubtask(subtask1Id);
     }
@@ -40,7 +45,7 @@ class SubtaskTest {
 
     @Test
     void checkSubtaskCannotAddItselfAsSubtask() throws ManagerSaveException {
-        Task subtask2 = new Subtask("Test subtask1", "Test subtask1 description", NEW , subtask1Id);
+        Task subtask2 = new Subtask("Test subtask1", "Test subtask1 description", NEW , duration, LocalDateTime.of(2025, 3, 16, 10, 30, 0), subtask1Id);
         int subtask2Id = taskManager.addSubtask((Subtask) subtask2);
         assertEquals(0,subtask2Id,"Ошибка, субтаск добавлен!");
     }
