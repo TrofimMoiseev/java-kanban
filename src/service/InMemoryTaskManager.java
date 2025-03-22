@@ -1,6 +1,7 @@
 package service;
 
 import model.*;
+
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -41,7 +42,7 @@ public class InMemoryTaskManager implements TaskManager {
     public int addSubtask(Subtask subtask) {
         if (getPrioritizedTasks().stream().anyMatch(oldTask -> timeValidation(oldTask, subtask))) {
             throw new TaskValidationException("Задачи пересекаются");
-        } else if (!epics.containsKey(subtask.getEpicId())){
+        } else if (!epics.containsKey(subtask.getEpicId())) {
             throw new NotFoundException("Эпик данной подзадачи не найден.");
         }
         subtask.setId(getSequence());
@@ -118,7 +119,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTask(int id) throws NotFoundException {
         Task task = tasks.get(id);
-        if(task == null) {
+        if (task == null) {
             throw new NotFoundException("Задачи с таким id " + id + " не существует.");
         }
         historyManager.add(task);
@@ -128,7 +129,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubtask(int id) throws NotFoundException {
         Subtask subtask = subtasks.get(id);
-        if(subtask == null) {
+        if (subtask == null) {
             throw new NotFoundException("Подзадачи с таким id " + id + " не существует.");
         }
         historyManager.add(subtask);
@@ -139,7 +140,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpic(int id) throws NotFoundException {
         Epic epic = epics.get(id);
-        if(epic == null) {
+        if (epic == null) {
             throw new NotFoundException("Эпика с таким id " + id + " не существует.");
         }
         historyManager.add(epic);
@@ -190,7 +191,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTaskById(int id) throws NotFoundException {
-        if(tasks.containsKey(id)) {
+        if (tasks.containsKey(id)) {
             historyManager.remove(id);
             prioritizedTasks.remove(tasks.get(id));
             tasks.remove(id);
