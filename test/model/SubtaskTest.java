@@ -2,9 +2,7 @@ package model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.ManagerSaveException;
-import service.Managers;
-import service.TaskManager;
+import service.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -27,7 +25,7 @@ class SubtaskTest {
         duration = Duration.ofMinutes(5L);
         epic1 = new Epic("Test epic1", "Test epic1 description");
         epicId = taskManager.addEpic(epic1);
-        subtask1 = new Subtask("Test subtask1", "Test subtask1 description", NEW, duration, LocalDateTime.of(2025, 3, 16, 10, 30, 0), epicId);
+        subtask1 = new Subtask("Test subtask1", "Test subtask1 description", NEW, duration, LocalDateTime.of(2025, 3, 16, 10, 20, 0), epicId);
         subtask1Id = taskManager.addSubtask(subtask1);
         savedSubtask1 = taskManager.getSubtask(subtask1Id);
     }
@@ -45,8 +43,10 @@ class SubtaskTest {
 
     @Test
     void checkSubtaskCannotAddItselfAsSubtask() throws ManagerSaveException {
-        Task subtask2 = new Subtask("Test subtask1", "Test subtask1 description", NEW , duration, LocalDateTime.of(2025, 3, 16, 10, 30, 0), subtask1Id);
-        int subtask2Id = taskManager.addSubtask((Subtask) subtask2);
-        assertEquals(0,subtask2Id,"Ошибка, субтаск добавлен!");
+        assertThrows(NotFoundException.class, () -> {
+            Task subtask2 = new Subtask("Test subtask1", "Test subtask1 description", NEW, duration, LocalDateTime.of(2025, 3, 16, 10, 30, 0), subtask1Id);
+            int subtask2Id = taskManager.addSubtask((Subtask) subtask2);
+            assertEquals(0, subtask2Id, "Ошибка, субтаск добавлен!");
+        });
     }
 }

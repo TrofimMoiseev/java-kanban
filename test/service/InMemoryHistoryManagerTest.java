@@ -29,12 +29,12 @@ class InMemoryHistoryManagerTest {
         duration = Duration.ofMinutes(5L);
         taskManager = Managers.getDefault();
         task = new Task("Test task", "Test task description", NEW, duration,
-                LocalDateTime.of(2025, 3, 16, 10, 30, 0));
+                LocalDateTime.of(2025, 3, 16, 10, 20, 0));
         taskId = taskManager.addTask(task);
         epic = new Epic("Test epic", "Test epic description");
         epicId = taskManager.addEpic(epic);
         subtask = new Subtask("Test task", "Test task description", NEW, duration,
-                LocalDateTime.of(2025, 3, 16, 10, 40, 0), epicId);
+                LocalDateTime.of(2025, 3, 16, 10, 10, 0), epicId);
         subtaskId = taskManager.addSubtask(subtask);
     }
 
