@@ -1,13 +1,11 @@
-package Http;
+package http;
 
-import Http.Handler.*;
-import Http.adapter.DurationAdapter;
-import Http.adapter.LocalDateTimeAdapter;
+import http.Handler.*;
+import http.adapter.DurationAdapter;
+import http.adapter.LocalDateTimeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpServer;
-import model.Epic;
-import model.Subtask;
 import service.Managers;
 import service.TaskManager;
 

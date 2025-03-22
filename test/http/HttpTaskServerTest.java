@@ -1,7 +1,7 @@
-package Http;
+package http;
 
-import Http.adapter.DurationAdapter;
-import Http.adapter.LocalDateTimeAdapter;
+import http.adapter.DurationAdapter;
+import http.adapter.LocalDateTimeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.Test;

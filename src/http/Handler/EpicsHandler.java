@@ -1,6 +1,6 @@
-package Http.Handler;
+package http.Handler;
 
-import Http.HttpTaskServer;
+import http.HttpTaskServer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
