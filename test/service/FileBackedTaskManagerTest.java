@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -105,16 +106,13 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     void testDeleteTask() throws ManagerSaveException {
         Task task = new Task("Task to delete", "Delete description", TaskStatus.NEW, duration,
                 LocalDateTime.of(2025, 3, 16, 10, 30, 0));
-        task.setId(1);
 
-        // Добавление задачи
-        taskManager.addTask(task);
+        int id = taskManager.addTask(task);
 
-        // Удаление задачи
-        taskManager.deleteTaskById(1);
-
+        taskManager.deleteTaskById(id);
+       List<Task> l = taskManager.getTaskList();
         // Проверка, что задача была удалена
-        assertNull(taskManager.getTask(1), "Задача должна быть удалена");
+        assertTrue(l.isEmpty(), "Задача должна быть удалена");
     }
 
     @AfterEach

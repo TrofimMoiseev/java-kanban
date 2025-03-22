@@ -38,18 +38,20 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void addTask() {
         taskId = taskManager.addTask(task);
-        Task task1 = new Task("Test task", "Test task description", NEW, duration,
-                LocalDateTime.of(2025, 3, 16, 10, 32, 0));
-        int taskId1 = taskManager.addTask(task1);
-
-
-        assertNotNull(taskId, "Задача не найдена.");
-        assertEquals(0, taskId1, "Id должен быть 0");
+        assertThrows(TaskValidationException.class, () -> {
+            Task task1 = new Task("Test task", "Test task description", NEW, duration,
+                    LocalDateTime.of(2025, 3, 16, 10, 32, 0));
+            int taskId1 = taskManager.addTask(task1);
+            assertNotNull(taskId, "Задача не найдена.");
+            assertEquals(0, taskId1, "Id должен быть 0");
+        });
     }
 
 
     @Test
     void addSubtask() {
+        assertThrows(TaskValidationException.class, () -> {
+
         epicId = taskManager.addEpic(epic);
         subtask = new Subtask("Test subtask", "Test subtask description", NEW, duration,
                 LocalDateTime.of(2025, 3, 16, 10, 0, 0), epicId);
@@ -60,6 +62,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         assertNotNull(subtaskId, "Задача не найдена.");
         assertEquals(0, subtaskId1, "Id должен быть 0");
+        });
     }
 
     @Test
@@ -68,7 +71,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic1 = new Epic("Test epic", "Test epic description");
         int epicId1 = taskManager.addEpic(epic1);
 
+
         assertNotNull(epicId, "Задача не найдена.");
+        assertNotNull(epicId1, "Задача не найдена.");
     }
 
     @Test
@@ -76,7 +81,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskId = taskManager.addTask(task);
         savedTask = taskManager.getTask(taskId);
         List<Task> tasks = taskManager.getTaskList();
-
         assertNotNull(tasks, "Задачи не возвращаются."); //добавляет задачу и может найти ее по id;
         assertEquals(1, tasks.size(), "Неверное количество задач.");
 
@@ -84,16 +88,18 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void getSubtaskList() {
-        epicId = taskManager.addEpic(epic);
-        subtask = new Subtask("Test subtask", "Test subtask description", NEW, duration,
-                LocalDateTime.of(2025, 3, 16, 10, 0, 0), epicId);
-        subtaskId = taskManager.addSubtask(subtask);
-        subtaskId = taskManager.addSubtask(subtask);
-        savedSubtask = taskManager.getSubtask(subtaskId);
-        List<Subtask> subtasks = taskManager.getSubtaskList();
+        assertThrows(TaskValidationException.class, () -> {
+            epicId = taskManager.addEpic(epic);
+            subtask = new Subtask("Test subtask", "Test subtask description", NEW, duration,
+                    LocalDateTime.of(2025, 3, 16, 10, 0, 0), epicId);
+            subtaskId = taskManager.addSubtask(subtask);
+            subtaskId = taskManager.addSubtask(subtask);
+            savedSubtask = taskManager.getSubtask(subtaskId);
+            List<Subtask> subtasks = taskManager.getSubtaskList();
 
-        assertNotNull(subtasks, "Задачи не возвращаются.");
-        assertEquals(1, subtasks.size(), "Неверное количество задач.");
+            assertNotNull(subtasks, "Задачи не возвращаются.");
+            assertEquals(1, subtasks.size(), "Неверное количество задач.");
+        });
     }
 
     @Test
@@ -101,6 +107,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         epicId = taskManager.addEpic(epic);
         savedEpic = taskManager.getEpic(epicId);
         List<Epic> epics = taskManager.getEpicList();
+
 
         assertNotNull(epics, "Задачи не возвращаются.");
         assertEquals(1, epics.size(), "Неверное количество задач.");
@@ -225,7 +232,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         subtask.setNameTask("Test task2");
         subtask.setDescriptionTask("Test task description2");
         subtask.setStatusOfTask(IN_PROGRESS);
-        taskManager.updateTask(task);
+        taskManager.updateSubtask(subtask);
         savedTask = taskManager.getSubtask(subtaskId);
 
         assertEquals("Test task2", savedTask.getNameTask(), "Имена не должны совпадать");
