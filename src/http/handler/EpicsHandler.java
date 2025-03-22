@@ -31,7 +31,7 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
         switch (exchange.getRequestMethod()) {
             case "GET":
                 if (id == 0) {
-                    final List <Epic> epics = taskManager.getEpicList();
+                    final List<Epic> epics = taskManager.getEpicList();
                     response = gson.toJson(epics);
                     System.out.println("Получили все эпики");
                     sendText(exchange, response);
@@ -42,23 +42,23 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
                             response = gson.toJson(subtasks);
                             System.out.println("Получили все подзадачи");
                             sendText(exchange, response);
-                        } catch(NotFoundException e) {
+                        } catch (NotFoundException e) {
                             System.out.println(e.getMessage());
                             sendNotFound(exchange);
                         }
                     } else {
-                           try {
-                               Epic epic = taskManager.getEpic(id);
-                               System.out.println(epic);
-                               response = gson.toJson(epic);
-                               System.out.println(response);
-                               System.out.println("Получили задачу id = " + id);
-                               sendText(exchange, response);
+                        try {
+                            Epic epic = taskManager.getEpic(id);
+                            System.out.println(epic);
+                            response = gson.toJson(epic);
+                            System.out.println(response);
+                            System.out.println("Получили задачу id = " + id);
+                            sendText(exchange, response);
 
-                           } catch (NotFoundException e) {
-                               System.out.println(e.getMessage());
-                               sendNotFound(exchange);
-                       }
+                        } catch (NotFoundException e) {
+                            System.out.println(e.getMessage());
+                            sendNotFound(exchange);
+                        }
                     }
                 }
                 break;
@@ -68,17 +68,17 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
                 String nameTask = jsonObject.get("nameTask").getAsString();
                 String descriptionTask = jsonObject.get("descriptionTask").getAsString();
                 Epic epic = new Epic(nameTask, descriptionTask);
-                        taskManager.addEpic(epic);
-                        int id1 = epic.getId();
-                        System.out.println("Создали эпик id = " + id1);
-                        exchange.sendResponseHeaders(201,0);
-                        exchange.close();
+                taskManager.addEpic(epic);
+                int id1 = epic.getId();
+                System.out.println("Создали эпик id = " + id1);
+                exchange.sendResponseHeaders(201, 0);
+                exchange.close();
                 break;
             case "DELETE":
                 try {
                     taskManager.deleteEpicById(id);
                     System.out.println("Удалили задачу id = " + id);
-                    exchange.sendResponseHeaders(200,0);
+                    exchange.sendResponseHeaders(200, 0);
                     exchange.close();
                 } catch (NotFoundException e) {
                     System.out.println(e.getMessage());

@@ -35,7 +35,7 @@ public class BaseHttpHandler {
         final String[] urlSplited = path.split("/");
         int id = 0;
         if (urlSplited.length >= NUM_PARTS_IN_PATH_WITH_ID) {
-            id = Integer.parseInt(urlSplited[NUM_PARTS_IN_PATH_WITH_ID-1]);
+            id = Integer.parseInt(urlSplited[NUM_PARTS_IN_PATH_WITH_ID - 1]);
         }
         return id;
     }

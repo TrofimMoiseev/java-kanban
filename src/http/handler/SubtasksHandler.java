@@ -51,7 +51,7 @@ public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
                 Subtask subtask = gson.fromJson(json, Subtask.class);
                 if (id == 0) {
                     try {
-                         int id1 = taskManager.addSubtask(subtask);
+                        int id1 = taskManager.addSubtask(subtask);
                         System.out.println("Создали подзадачу id = " + id1);
                         exchange.sendResponseHeaders(201, 0);
                         exchange.close();

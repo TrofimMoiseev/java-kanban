@@ -22,7 +22,7 @@ public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String response;
-        if(exchange.getRequestMethod().equals("GET")) {
+        if (exchange.getRequestMethod().equals("GET")) {
             final List<Task> prioritizedList = taskManager.getPrioritizedTasks();
             response = gson.toJson(prioritizedList);
             System.out.println("Получили сортированный список");

@@ -59,7 +59,7 @@ class HttpTaskServerTest {
 
     @Test
     public void shouldAddTask() throws IOException, InterruptedException {
-        Task task = new Task("Test Task", "Test desc",  duration, LocalDateTime.now());
+        Task task = new Task("Test Task", "Test desc", duration, LocalDateTime.now());
         task.setId(1);
 
         String taskJson = gson.toJson(task);

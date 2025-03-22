@@ -51,12 +51,12 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
                 Task task = gson.fromJson(json, Task.class);
                 if (id == 0) {
                     try {
-                    int id1 = taskManager.addTask(task);
+                        int id1 = taskManager.addTask(task);
                         System.out.println(task);
-                    System.out.println("Создали задачу id = " + id1);
+                        System.out.println("Создали задачу id = " + id1);
                         exchange.sendResponseHeaders(201, 0);
                         exchange.close();
-                } catch (TaskValidationException e) {
+                    } catch (TaskValidationException e) {
                         System.out.println(e.getMessage());
                         sendHasInteractions(exchange);
                     }
@@ -74,15 +74,15 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
                 }
                 break;
             case "DELETE":
-               try {
-                   taskManager.deleteTaskById(id);
-                   System.out.println("Удалили задачу id = " + id);
-                   exchange.sendResponseHeaders(200,0);
-                   exchange.close();
-               } catch (NotFoundException e) {
-                   System.out.println(e.getMessage());
-                   sendNotFound(exchange);
-               }
+                try {
+                    taskManager.deleteTaskById(id);
+                    System.out.println("Удалили задачу id = " + id);
+                    exchange.sendResponseHeaders(200, 0);
+                    exchange.close();
+                } catch (NotFoundException e) {
+                    System.out.println(e.getMessage());
+                    sendNotFound(exchange);
+                }
                 break;
             default:
                 sendNotFound(exchange);
