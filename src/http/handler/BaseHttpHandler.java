@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class BaseHttpHandler {
-    final static int NUM_PARTS_IN_PATH_WITH_ID = 3;
+    static final int NUM_PARTS_IN_PATH_WITH_ID = 3;
 
     protected String readText(HttpExchange exchange) throws IOException {
         return new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
