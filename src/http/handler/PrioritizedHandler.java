@@ -1,4 +1,4 @@
-package http.Handler;
+package http.handler;
 
 import http.HttpTaskServer;
 import com.google.gson.Gson;

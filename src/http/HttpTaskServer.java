@@ -1,6 +1,6 @@
 package http;
 
-import http.Handler.*;
+import http.handler.*;
 import http.adapter.DurationAdapter;
 import http.adapter.LocalDateTimeAdapter;
 import com.google.gson.Gson;

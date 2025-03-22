@@ -1,4 +1,4 @@
-package http.Handler;
+package http.handler;
 
 import http.HttpTaskServer;
 import com.google.gson.Gson;
@@ -22,13 +22,13 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String response;
-       if(exchange.getRequestMethod().equals("GET")) {
-           final List<Task> history = taskManager.getHistory();
-           response = gson.toJson(history);
-           System.out.println("Получили историю");
-           sendText(exchange, response);
-       } else {
-           sendNotFound(exchange);
-       }
+        if (exchange.getRequestMethod().equals("GET")) {
+            final List<Task> history = taskManager.getHistory();
+            response = gson.toJson(history);
+            System.out.println("Получили историю");
+            sendText(exchange, response);
+        } else {
+            sendNotFound(exchange);
+        }
     }
 }

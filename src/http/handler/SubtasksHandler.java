@@ -1,10 +1,10 @@
-package http.Handler;
+package http.handler;
 
 import http.HttpTaskServer;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import model.Task;
+import model.Subtask;
 import service.NotFoundException;
 import service.TaskManager;
 import service.TaskValidationException;
@@ -12,11 +12,11 @@ import service.TaskValidationException;
 import java.io.IOException;
 import java.util.List;
 
-public class TasksHandler extends BaseHttpHandler implements HttpHandler {
+public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
     private final TaskManager taskManager;
     private final Gson gson;
 
-    public TasksHandler(TaskManager taskManager) {
+    public SubtasksHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
         gson = HttpTaskServer.getGson();
     }
@@ -28,18 +28,18 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
         switch (exchange.getRequestMethod()) {
             case "GET":
                 if (id == 0) {
-                    final List<Task> tasks = taskManager.getTaskList();
-                    response = gson.toJson(tasks);
-                    System.out.println("Получили все задачи");
+                    final List<Subtask> subtasks = taskManager.getSubtaskList();
+                    response = gson.toJson(subtasks);
+                    System.out.println("Получили все подзадачи");
                     sendText(exchange, response);
-                    return;
                 } else {
                     try {
-                        Task task = taskManager.getTask(id);
-                        response = gson.toJson(task);
-                        System.out.println("Получили задачу id = " + id);
+                        Subtask subtask = taskManager.getSubtask(id);
+                        response = gson.toJson(subtask);
+                        System.out.println("Получили подзадачу id = " + id);
                         sendText(exchange, response);
                         return;
+
                     } catch (NotFoundException e) {
                         System.out.println(e.getMessage());
                         sendNotFound(exchange);
@@ -48,25 +48,23 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
                 break;
             case "POST":
                 String json = readText(exchange);
-                Task task = gson.fromJson(json, Task.class);
+                Subtask subtask = gson.fromJson(json, Subtask.class);
                 if (id == 0) {
                     try {
-                    int id1 = taskManager.addTask(task);
-                        System.out.println(task);
-                    System.out.println("Создали задачу id = " + id1);
+                         int id1 = taskManager.addSubtask(subtask);
+                        System.out.println("Создали подзадачу id = " + id1);
                         exchange.sendResponseHeaders(201, 0);
                         exchange.close();
-                } catch (TaskValidationException e) {
+                    } catch (TaskValidationException | NotFoundException e) {
                         System.out.println(e.getMessage());
                         sendHasInteractions(exchange);
                     }
                 } else {
                     try {
-                        taskManager.updateTask(task);
-                        System.out.println("Обновили задачу id = " + task.getId());
+                        taskManager.updateSubtask(subtask);
+                        System.out.println("Обновили подзадачу id = " + subtask.getId());
                         exchange.sendResponseHeaders(201, 0);
                         exchange.close();
-
                     } catch (TaskValidationException e) {
                         System.out.println(e.getMessage());
                         sendHasInteractions(exchange);
@@ -74,15 +72,15 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
                 }
                 break;
             case "DELETE":
-               try {
-                   taskManager.deleteTaskById(id);
-                   System.out.println("Удалили задачу id = " + id);
-                   exchange.sendResponseHeaders(200,0);
-                   exchange.close();
-               } catch (NotFoundException e) {
-                   System.out.println(e.getMessage());
-                   sendNotFound(exchange);
-               }
+                try {
+                    taskManager.deleteSubtaskById(id);
+                    System.out.println("Удалили подзадачу id = " + id);
+                    exchange.sendResponseHeaders(200, 0);
+                    exchange.close();
+                } catch (NotFoundException e) {
+                    System.out.println(e.getMessage());
+                    sendNotFound(exchange);
+                }
                 break;
             default:
                 sendNotFound(exchange);
