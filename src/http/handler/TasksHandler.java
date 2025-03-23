@@ -1,9 +1,6 @@
 package http.handler;
 
-import http.HttpTaskServer;
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import model.Task;
 import service.NotFoundException;
 import service.TaskManager;
@@ -12,13 +9,10 @@ import service.TaskValidationException;
 import java.io.IOException;
 import java.util.List;
 
-public class TasksHandler extends BaseHttpHandler implements HttpHandler {
-    private final TaskManager taskManager;
-    private final Gson gson;
+public class TasksHandler extends BaseHttpHandler {
 
     public TasksHandler(TaskManager taskManager) {
-        this.taskManager = taskManager;
-        gson = HttpTaskServer.getGson();
+        super(taskManager);
     }
 
     @Override
@@ -48,31 +42,35 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
                 break;
             case "POST":
                 String json = readText(exchange);
-                Task task = gson.fromJson(json, Task.class);
-                if (id == 0) {
-                    try {
-                        int id1 = taskManager.addTask(task);
-                        System.out.println(task);
-                        System.out.println("Создали задачу id = " + id1);
-                        exchange.sendResponseHeaders(201, 0);
-                        exchange.close();
-                    } catch (TaskValidationException e) {
-                        System.out.println(e.getMessage());
-                        sendHasInteractions(exchange);
-                    }
+                if (json == null || json.isEmpty()) {
+                    sendNotFound(exchange);
                 } else {
-                    try {
-                        taskManager.updateTask(task);
-                        System.out.println("Обновили задачу id = " + task.getId());
-                        exchange.sendResponseHeaders(201, 0);
-                        exchange.close();
+                    Task task = gson.fromJson(json, Task.class);
+                    if (id == 0) {
+                        try {
+                            int id1 = taskManager.addTask(task);
+                            System.out.println(task);
+                            System.out.println("Создали задачу id = " + id1);
+                            exchange.sendResponseHeaders(201, 0);
+                            exchange.close();
+                        } catch (TaskValidationException e) {
+                            System.out.println(e.getMessage());
+                            sendHasInteractions(exchange);
+                        }
+                    } else {
+                        try {
+                            taskManager.updateTask(task);
+                            System.out.println("Обновили задачу id = " + task.getId());
+                            exchange.sendResponseHeaders(201, 0);
+                            exchange.close();
 
-                    } catch (TaskValidationException e) {
-                        System.out.println(e.getMessage());
-                        sendHasInteractions(exchange);
+                        } catch (TaskValidationException e) {
+                            System.out.println(e.getMessage());
+                            sendHasInteractions(exchange);
+                        }
                     }
+                    break;
                 }
-                break;
             case "DELETE":
                 try {
                     taskManager.deleteTaskById(id);

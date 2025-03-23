@@ -1,12 +1,23 @@
 package http.handler;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import http.HttpTaskServer;
+import service.TaskManager;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public class BaseHttpHandler {
+abstract class BaseHttpHandler implements HttpHandler {
+    protected final TaskManager taskManager;
+    protected final Gson gson;
     static final int NUM_PARTS_IN_PATH_WITH_ID = 3;
+
+    BaseHttpHandler(TaskManager taskManager) {
+        this.taskManager = taskManager;
+        gson = HttpTaskServer.getGson();
+    }
 
     protected String readText(HttpExchange exchange) throws IOException {
         return new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);

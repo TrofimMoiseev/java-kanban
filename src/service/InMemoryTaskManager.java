@@ -117,7 +117,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTask(int id) throws NotFoundException {
+    public Task getTask(int id) {
         Task task = tasks.get(id);
         if (task == null) {
             throw new NotFoundException("Задачи с таким id " + id + " не существует.");
@@ -127,7 +127,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Subtask getSubtask(int id) throws NotFoundException {
+    public Subtask getSubtask(int id) {
         Subtask subtask = subtasks.get(id);
         if (subtask == null) {
             throw new NotFoundException("Подзадачи с таким id " + id + " не существует.");
@@ -138,7 +138,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic getEpic(int id) throws NotFoundException {
+    public Epic getEpic(int id) {
         Epic epic = epics.get(id);
         if (epic == null) {
             throw new NotFoundException("Эпика с таким id " + id + " не существует.");
@@ -180,7 +180,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateEpic(Epic epic1) throws NotFoundException {
+    public void updateEpic(Epic epic1) {
         if (epics.containsKey(epic1.getId())) {
             epics.get(epic1.getId()).setNameTask(epic1.getNameTask());
             epics.get(epic1.getId()).setDescriptionTask(epic1.getDescriptionTask());
@@ -190,7 +190,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteTaskById(int id) throws NotFoundException {
+    public void deleteTaskById(int id) {
         if (tasks.containsKey(id)) {
             historyManager.remove(id);
             prioritizedTasks.remove(tasks.get(id));
@@ -201,7 +201,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteSubtaskById(int id) throws NotFoundException { //Удаление субтасков из листа эпика и мапы
+    public void deleteSubtaskById(int id) { //Удаление субтасков из листа эпика и мапы
         if (subtasks.containsKey(id)) {
             prioritizedTasks.remove(subtasks.get(id));
             Epic epic = epics.get(subtasks.get(id).getEpicId());
@@ -216,7 +216,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteEpicById(int id) throws NotFoundException { //Удаление эпиков, очистка субтасков эпика из листа и мапы
+    public void deleteEpicById(int id) { //Удаление эпиков, очистка субтасков эпика из листа и мапы
         if (epics.containsKey(id)) {
             for (Subtask subtask : epics.get(id).getSubtaskList()) {
                 historyManager.remove(subtask.getId());

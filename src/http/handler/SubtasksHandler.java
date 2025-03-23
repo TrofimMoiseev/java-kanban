@@ -1,9 +1,6 @@
 package http.handler;
 
-import http.HttpTaskServer;
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import model.Subtask;
 import service.NotFoundException;
 import service.TaskManager;
@@ -12,13 +9,10 @@ import service.TaskValidationException;
 import java.io.IOException;
 import java.util.List;
 
-public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
-    private final TaskManager taskManager;
-    private final Gson gson;
+public class SubtasksHandler extends BaseHttpHandler {
 
     public SubtasksHandler(TaskManager taskManager) {
-        this.taskManager = taskManager;
-        gson = HttpTaskServer.getGson();
+        super(taskManager);
     }
 
     @Override
@@ -48,29 +42,33 @@ public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
                 break;
             case "POST":
                 String json = readText(exchange);
-                Subtask subtask = gson.fromJson(json, Subtask.class);
-                if (id == 0) {
-                    try {
-                        int id1 = taskManager.addSubtask(subtask);
-                        System.out.println("Создали подзадачу id = " + id1);
-                        exchange.sendResponseHeaders(201, 0);
-                        exchange.close();
-                    } catch (TaskValidationException | NotFoundException e) {
-                        System.out.println(e.getMessage());
-                        sendHasInteractions(exchange);
-                    }
+                if (json == null || json.isEmpty()) {
+                    sendNotFound(exchange);
                 } else {
-                    try {
-                        taskManager.updateSubtask(subtask);
-                        System.out.println("Обновили подзадачу id = " + subtask.getId());
-                        exchange.sendResponseHeaders(201, 0);
-                        exchange.close();
-                    } catch (TaskValidationException e) {
-                        System.out.println(e.getMessage());
-                        sendHasInteractions(exchange);
+                    Subtask subtask = gson.fromJson(json, Subtask.class);
+                    if (id == 0) {
+                        try {
+                            int id1 = taskManager.addSubtask(subtask);
+                            System.out.println("Создали подзадачу id = " + id1);
+                            exchange.sendResponseHeaders(201, 0);
+                            exchange.close();
+                        } catch (TaskValidationException | NotFoundException e) {
+                            System.out.println(e.getMessage());
+                            sendHasInteractions(exchange);
+                        }
+                    } else {
+                        try {
+                            taskManager.updateSubtask(subtask);
+                            System.out.println("Обновили подзадачу id = " + subtask.getId());
+                            exchange.sendResponseHeaders(201, 0);
+                            exchange.close();
+                        } catch (TaskValidationException e) {
+                            System.out.println(e.getMessage());
+                            sendHasInteractions(exchange);
+                        }
                     }
+                    break;
                 }
-                break;
             case "DELETE":
                 try {
                     taskManager.deleteSubtaskById(id);
