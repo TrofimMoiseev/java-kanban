@@ -44,6 +44,7 @@ public class SubtasksHandler extends BaseHttpHandler {
                 String json = readText(exchange);
                 if (json == null || json.isEmpty()) {
                     sendNotFound(exchange);
+                    break;
                 } else {
                     Subtask subtask = gson.fromJson(json, Subtask.class);
                     if (id == 0) {

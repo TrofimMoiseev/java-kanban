@@ -44,6 +44,7 @@ public class TasksHandler extends BaseHttpHandler {
                 String json = readText(exchange);
                 if (json == null || json.isEmpty()) {
                     sendNotFound(exchange);
+                    break;
                 } else {
                     Task task = gson.fromJson(json, Task.class);
                     if (id == 0) {

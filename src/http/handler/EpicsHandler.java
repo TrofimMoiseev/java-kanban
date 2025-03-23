@@ -43,9 +43,7 @@ public class EpicsHandler extends BaseHttpHandler {
                     } else {
                         try {
                             Epic epic = taskManager.getEpic(id);
-                            System.out.println(epic);
                             response = gson.toJson(epic);
-                            System.out.println(response);
                             System.out.println("Получили задачу id = " + id);
                             sendText(exchange, response);
 
@@ -60,6 +58,7 @@ public class EpicsHandler extends BaseHttpHandler {
                 String json = readText(exchange);
                 if (json == null || json.isEmpty()) {
                     sendNotFound(exchange);
+                    break;
                 } else {
                     JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
                     String nameTask = jsonObject.get("nameTask").getAsString();

@@ -149,7 +149,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task task) throws TaskValidationException { //Обновление задач
+    public void updateTask(Task task) { //Обновление задач
         if (tasks.containsKey(task.getId()) && getPrioritizedTasks().stream()
                 .filter(oldTask -> oldTask.getId() != (task.getId()))
                 .noneMatch(oldTask -> timeValidation(oldTask, task))) {
@@ -162,7 +162,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) throws TaskValidationException {
+    public void updateSubtask(Subtask subtask) {
         if (subtasks.containsKey(subtask.getId()) && getPrioritizedTasks().stream()
                 .filter(oldTask -> oldTask.getId() != (subtask.getId()))
                 .noneMatch(oldTask -> timeValidation(oldTask, subtask))) {
